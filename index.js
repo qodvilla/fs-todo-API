@@ -100,19 +100,22 @@ server.post('/signIn', (req, res) => {
     pg.select("*").where('email', email).from('login')
     .then(response => {
             const user = response[0];
-            console.log(user);
-            bcrypt.compare(password, response[0].hash)
-            .then(match => {
-                if(match){
-                    res.send({email: user.email}).status(200);
-                    return;
-                } else {
-                    res.send("You are not who you claim to be...").status(401);
-                }
+            if(user) {
+                bcrypt.compare(password, response[0].hash)
+                .then(match => {
+                    if(match){
+                        res.send({email: user.email}).status(200);
+                        return;
+                    } else {
+                        res.send("You are not who you claim to be...").status(401);
+                    }
+                })
+                .catch(e => {
+                    res.send("Internal Server Error").status(500);
             })
-            .catch(e => {
-                res.send("Internal Server Error").status(500);
-        })
+        } else {
+            res.send("No such user found")        
+        }
     })
     .catch(e => {
     })
