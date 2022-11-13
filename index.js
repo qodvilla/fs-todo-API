@@ -50,21 +50,15 @@ server.delete('/deleteTodo', (req, res) => {
 
 server.put('/markTodoCompleted/:id', (req, res) => {
     const data = req.body
-    console.log(data)
     pg('todos').where('id', req.params.id).update(data).then(response => {
-        console.log(response);
     }).catch(e => {
-        console.log(e);
     })
 })
 
 
 server.put('/markTodoUncompleted/:id', (req, res) => {
-    console.log(req.params.id);
     const data = req.body
-    console.log(data)
     pg('todos').where('id', req.params.id).update(data).then(response => {
-        res.send("OK").status(200);
     }).catch(e => {
         // Error handling 
     })
@@ -114,7 +108,7 @@ server.post('/signIn', (req, res) => {
                     res.send("Internal Server Error").status(500);
             })
         } else {
-            res.send("No such user found")        
+            res.send("No such user found")
         }
     })
     .catch(e => {
